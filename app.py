@@ -51,7 +51,7 @@ def index():
 			'apiKey': 'c9df1d7d745740a887e0f65f5285d36d'
 		}
 		search_params.update(q)
-		print(search_params)
+		# print(search_params)
 
 		r = requests.get(search_url, params=search_params)
 		data = r.json()['articles']
@@ -91,7 +91,7 @@ def index():
 		berita1['probability'] = pd.Series(si3)
 		berita1['probability'] = berita1['probability'].round(2) * 100
 		berita1['probability'] = berita1['probability'] // np.power(10, np.log10(berita1['probability']).astype(int) - 1)
-		print(berita1)
+		# print(berita1)
 		berita1.to_csv('tes3.csv') 
 
 		sentiment = request.form.get('sentiment')
@@ -182,24 +182,24 @@ def insight_line_chart():
 		
 		sentiment_dict = by_day_sentiment.to_dict('dict')
 		sentiment_dict_new = {k: {m.strftime('%Y-%m-%d %H:%M:%S'): v if v == v else 0 for m, v in v.items()} for k, v in sentiment_dict.items()}
-		print(sentiment_dict_new)
+		# print(sentiment_dict_new)
 		filter = {k:list(v.values()) for k, v in sentiment_dict_new.items()}
 		list_tanggal = []
 		any_key = next(iter(filter))
 		for key in sentiment_dict_new[any_key]:
 			list_tanggal.append(key)
-		print(list_tanggal)
+		# print(list_tanggal)
 		filter["tanggal"] = list_tanggal
 
-		print(filter)
-		print('#################')
+		# print(filter)
+		# print('#################')
 
 		
 		f.close()
 		return json.dumps(filter)
 	except Exception as e:
-		print("exception saya")
-		print(e)
+		# print("exception saya")
+		# print(e)
 		raise
 		
 @app.route('/piechart', methods=['GET', 'POST'])
@@ -240,7 +240,7 @@ def insight_pie_chart():
 		
 		sentiment_dict = by_day_sentiment.to_dict('dict')
 		sentiment_dict_new = {k: {m.strftime('%Y-%m-%d %H:%M:%S'): v if v == v else 0 for m, v in v.items()} for k, v in sentiment_dict.items()}
-		print(sentiment_dict_new)
+		# print(sentiment_dict_new)
 		filter = {k:list(v.values()) for k, v in sentiment_dict_new.items()}
 		filter1 = {k:sum(list(v.values())) for k, v in sentiment_dict_new.items() if k!= 'tanggal'}
 		# list_tanggal = []
@@ -248,16 +248,16 @@ def insight_pie_chart():
 		# 	list_tanggal.append(key)
 		# print(list_tanggal)
 		# filter["tanggal"] = list_tanggal
-		print('Ini Buat Pie Chart')
-		print(filter1)
-		print('#################')
+		# print('Ini Buat Pie Chart')
+		# print(filter1)
+		# print('#################')
 
 		
 		f.close()
 		return json.dumps(filter1)
 	except Exception as e:
-		print("exception saya")
-		print(e)
+		# print("exception saya")
+		# print(e)
 		raise
 
 
