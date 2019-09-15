@@ -18,6 +18,7 @@ from numpy import nan
 import numpy as np
 import math
 app = Flask(__name__)
+app.config['ENV'] = 'development'
 
 
 @app.route('/', methods=['GET', 'POST'])
