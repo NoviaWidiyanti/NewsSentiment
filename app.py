@@ -18,6 +18,7 @@ from numpy import nan
 import numpy as np
 import math
 app = Flask(__name__)
+app.config['DEBUG'] = True
 
 
 
@@ -261,7 +262,5 @@ def insight_pie_chart():
 
 
 
-# if __name__ == '__main__':
-# 	app.run()
-
-if __name__ == '__main__': app.run(debug=True)
+if __name__ == '__main__':
+	app.run(debug=True)
