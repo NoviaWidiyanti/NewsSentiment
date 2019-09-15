@@ -29,79 +29,80 @@ def index():
 	berita = []
 
 	if request.method == 'POST':
-		value = request.form.get('search')
-		time_window = int(request.form.get('time-window')) or 1
+	# 	value = request.form.get('search')
+	# 	time_window = int(request.form.get('time-window')) or 1
 
-		from_date = datetime.datetime.now() - datetime.timedelta(days=time_window)
-		to_date = datetime.datetime.now().strftime("%Y-%m-%d")
+	# 	from_date = datetime.datetime.now() - datetime.timedelta(days=time_window)
+	# 	to_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
-		query = request.form.get('anywhere')
-		if query == 'titlebody':
-			q = {'q':request.form.get('search')}
-		elif query == 'title':
-			q = {'qInTitle':request.form.get('search')}
+	# 	query = request.form.get('anywhere')
+	# 	if query == 'titlebody':
+	# 		q = {'q':request.form.get('search')}
+	# 	elif query == 'title':
+	# 		q = {'qInTitle':request.form.get('search')}
 
-		sort = request.form.get('sort') 
+	# 	sort = request.form.get('sort') 
 
-		search_params = {
-			'from':from_date.strftime("%Y-%m-%d"),
-			'to': to_date,
-			'language':'id',
-			'sortBy': sort,
-			'apiKey': 'c9df1d7d745740a887e0f65f5285d36d'
-		}
-		search_params.update(q)
-		# print(search_params)
+	# 	search_params = {
+	# 		'from':from_date.strftime("%Y-%m-%d"),
+	# 		'to': to_date,
+	# 		'language':'id',
+	# 		'sortBy': sort,
+	# 		'apiKey': 'c9df1d7d745740a887e0f65f5285d36d'
+	# 	}
+	# 	search_params.update(q)
+	# 	# print(search_params)
 
-		r = requests.get(search_url, params=search_params)
-		data = r.json()['articles']
+	# 	r = requests.get(search_url, params=search_params)
+	# 	data = r.json()['articles']
 		
-		for x in data:
-			tanggal = x['publishedAt'][:10]
-			tahun = int(tanggal[:4])
-			bulan = int(tanggal[5:7])
-			hari = int(tanggal[-2:])
+	# 	for x in data:
+	# 		tanggal = x['publishedAt'][:10]
+	# 		tahun = int(tanggal[:4])
+	# 		bulan = int(tanggal[5:7])
+	# 		hari = int(tanggal[-2:])
 			
 
-			formatted_date = datetime.date(tahun, bulan, hari).strftime("%d %B %Y")
+	# 		formatted_date = datetime.date(tahun, bulan, hari).strftime("%d %B %Y")
 
-			berita_data = {
-				'title' : x['title'],
-				'description' : x['description'],
-				'url' : x['url'],
-				'urlToImage' : x['urlToImage'],
-				'publishedAt' : formatted_date,
-				'author' : x['author'],
-				'sumber' : x['source']['name']
-			}
-			berita.append(berita_data)
-		berita1 = pd.DataFrame.from_dict(berita)
+	# 		berita_data = {
+	# 			'title' : x['title'],
+	# 			'description' : x['description'],
+	# 			'url' : x['url'],
+	# 			'urlToImage' : x['urlToImage'],
+	# 			'publishedAt' : formatted_date,
+	# 			'author' : x['author'],
+	# 			'sumber' : x['source']['name']
+	# 		}
+	# 		berita.append(berita_data)
+	# 	berita1 = pd.DataFrame.from_dict(berita)
 		
-		skripsi = putStemming(berita1)
-		# skripsi.to_csv('tes1.csv')
+	# 	skripsi = putStemming(berita1)
+	# 	# skripsi.to_csv('tes1.csv')
 
-		skripsi2 = applyStopword(skripsi)
-		skripsi2.to_csv('hasil.csv')
+	# 	skripsi2 = applyStopword(skripsi)
+	# 	skripsi2.to_csv('hasil.csv')
 
-		# skripsi3 = konten(skripsi2, 'SVM_Model_2.sav')
-		skrip, si3 = konten(skripsi2, 'proba.sav')
+	# 	# skripsi3 = konten(skripsi2, 'SVM_Model_2.sav')
+	# 	skrip, si3 = konten(skripsi2, 'proba.sav')
 		 
 
-		berita1['hasil_sentimen'] = pd.Series(skrip)
-		berita1['probability'] = pd.Series(si3)
-		berita1['probability'] = berita1['probability'].round(2) * 100
-		berita1['probability'] = berita1['probability'] // np.power(10, np.log10(berita1['probability']).astype(int) - 1)
-		# print(berita1)
-		berita1.to_csv('tes3.csv') 
+	# 	berita1['hasil_sentimen'] = pd.Series(skrip)
+	# 	berita1['probability'] = pd.Series(si3)
+	# 	berita1['probability'] = berita1['probability'].round(2) * 100
+	# 	berita1['probability'] = berita1['probability'] // np.power(10, np.log10(berita1['probability']).astype(int) - 1)
+	# 	# print(berita1)
+	# 	berita1.to_csv('tes3.csv') 
 
-		sentiment = request.form.get('sentiment')
-		if sentiment == 'All':
-			berita2 = berita1
-		elif sentiment != 'All':
-			query_hasil = "hasil_sentimen==\"%s\"" % sentiment
-			berita2 = berita1.query(query_hasil)
-		berita2.to_csv('tes4.csv')
-		return render_template('result.html', berita=berita2, value=value)
+	# 	sentiment = request.form.get('sentiment')
+	# 	if sentiment == 'All':
+	# 		berita2 = berita1
+	# 	elif sentiment != 'All':
+	# 		query_hasil = "hasil_sentimen==\"%s\"" % sentiment
+	# 		berita2 = berita1.query(query_hasil)
+	# 	berita2.to_csv('tes4.csv')
+		# return render_template('result.html', berita=berita2, value=value)
+		return render_template('hello.html')
 
 	return render_template('index.html')
 
